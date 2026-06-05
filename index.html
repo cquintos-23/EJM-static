@@ -7,6 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=Geist+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://res.cloudinary.com">
+    <link rel="preconnect" href="https://drive.google.com">
     <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
     <style>
     :root {
@@ -25,31 +27,6 @@
         position:relative; z-index:5;
         background:#fff;
         padding:10px 5vw 60px;
-    }
-
-    /* end buttons */
-    #end-buttons {
-        display:flex; flex-direction:row; align-items:center; justify-content:center; gap:6px;
-        margin-bottom:80px;
-    }
-    .end-btn {
-        display:inline-block; box-sizing:border-box; padding:10px 16px;
-        height:40px; text-align:center;
-        /* width = 2 panel shares + 1 gap between them */
-        /* panel width = (carousel-width - (N-1)*6) / N  →  2 panels + gap = (2*(W-(N-1)*6)/N)+6 */
-        /* expressed as fraction of carousel width W:  (2/N) * W  - (2*(N-1)/N)*6 + 6          */
-        flex: 0 0 calc((2 / var(--carousel-panels, 10)) * 100% - (2 * (var(--carousel-panels, 10) - 1) / var(--carousel-panels, 10)) * 6px + 6px);
-        background:var(--color-off-black); border:none; border-radius:8px;
-        font-family:'Geist',sans-serif; font-weight:500; font-size:16px; line-height:20px;
-        color:var(--color-white); text-decoration:none; white-space:nowrap;
-        cursor:pointer; box-shadow:none; text-transform:none;
-        transition:opacity .2s;
-    }
-    .end-btn:hover { opacity:0.85; }
-
-    /* shared column for buttons + carousel so % widths resolve identically */
-    #carousel-column {
-        display:flex; flex-direction:column;
     }
 
     /* expanding panels carousel */
@@ -102,19 +79,10 @@
 <!-- ═══ STATIC CONTENT ═══ -->
 <div id="static-content">
 
-    <!-- Shared column so button % widths resolve against carousel width -->
-    <div id="carousel-column">
-    <!-- End buttons -->
-    <div id="end-buttons">
-        <a class="end-btn" href="#">Map Builder</a>
-        <a class="end-btn" href="#">Initiative Index</a>
-    </div>
-
     <!-- Initiative carousel -->
     <div id="initiative-carousel">
         <!-- Cards injected by JS once data loads -->
     </div>
-    </div><!-- /carousel-column -->
 
 
 </div><!-- /static-content -->
@@ -138,11 +106,14 @@ function buildCarousel(allData){
     const sample=ccRows.filter(r=>r['Cover Image']);
     const extra=ccRows.filter(r=>!r['Cover Image']);
     while(extra.length) sample.push(extra.shift());
-    container.innerHTML=sample.map(d=>{
+    container.innerHTML=sample.map((d,i)=>{
         const img=(d['Cover Image']||'').trim();
         const bgStyle=img?`background-image:url('${img}')`:`background:#C8C8B8`;
+        // Preload first image eagerly via a hidden img tag for faster paint
+        const preload=img&&i===0?`<img src="${img}" style="display:none" fetchpriority="high" alt="">`:'';
         return `
         <div class="init-panel">
+            ${preload}
             <div class="init-panel-bg" style="${bgStyle}"></div>
             <div class="init-panel-content">
                 <div class="init-card-title">${d.Title||'Unknown Initiative'}</div>
@@ -155,9 +126,6 @@ function buildCarousel(allData){
             </div>
         </div>`;
     }).join('');
-    // Sync button width to panel count
-    const n=sample.length||1;
-    document.getElementById('carousel-column').style.setProperty('--carousel-panels', n);
 }
 
 
