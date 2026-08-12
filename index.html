@@ -1,134 +1,291 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EJM — Initiatives & FAQ</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=Geist+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://res.cloudinary.com">
-    <link rel="preconnect" href="https://drive.google.com">
-    <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monitor FAQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
     :root {
         --color-off-black: #3D3D31;
-        --color-white: #ffffff;
-        --color-sand: #B8B8A0;
-        --color-dark-sand: #5A5A48;
+        --sz-narrative: 18px;
     }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Geist Mono',monospace; background:#fff; color:#3D3D31; overflow:hidden; }
+    body { font-family:'Geist',sans-serif; background:#fff; color:#3D3D31; }
 
-    /* ═══════════════════════════════════
-       STATIC CONTENT (below scrollytelling)
-    ═══════════════════════════════════ */
-    #static-content {
-        position:relative; z-index:5;
-        background:#fff;
-        padding:80px 5vw 20px;
+    #faq-section {
+        width:100%; background:#fff;
+        padding:120px 9vw 160px; box-sizing:border-box;
     }
+    #faq-inner { max-width:760px; margin:0 auto; }
+    #faq-heading {
+        font-family:'Geist',sans-serif; font-size:28px; font-weight:600;
+        line-height:42px; letter-spacing:-0.01em;
+        color:var(--color-off-black); margin:0 0 12px 0; text-align:center;
+    }
+    #faq-list { margin-top:40px; }
+    .faq-item { border-bottom:1px solid rgba(61,61,49,0.07); }
+    .faq-item:first-child { border-top:1px solid rgba(61,61,49,0.07); }
+    .faq-question {
+        width:100%; display:flex; align-items:center; justify-content:space-between; gap:20px;
+        background:none; border:none; padding:24px 0; margin:0;
+        cursor:pointer; text-align:left; box-shadow:none;
+        font-family:'Geist',sans-serif; font-size:var(--sz-narrative); font-weight:500;
+        line-height:1.4; color:var(--color-off-black);
+    }
+    .faq-question-text { flex:1 1 auto; }
+    .faq-chevron {
+        flex:0 0 auto; width:16px; height:16px; display:flex; align-items:center; justify-content:center;
+        color:var(--color-off-black); transition:transform 0.3s ease;
+    }
+    .faq-item.expanded .faq-chevron { transform:rotate(180deg); }
+    .faq-answer {
+        display:grid; grid-template-rows:0fr;
+        transition:grid-template-rows 0.35s ease;
+    }
+    .faq-item.expanded .faq-answer { grid-template-rows:1fr; }
+    .faq-answer-inner { overflow:hidden; }
+    .faq-answer-inner p {
+        margin:0 0 24px 0;
+        font-family:'Geist',sans-serif; font-size:var(--sz-narrative); font-weight:400;
+        line-height:1.55; color:var(--color-off-black);
+    }
+    .faq-answer-inner p:last-child { margin-bottom:24px; }
+    .faq-answer-inner a { color:var(--color-off-black); text-decoration:underline; }
+    .faq-answer-inner a:hover { opacity:0.7; }
 
-    /* expanding panels carousel */
-    #initiative-carousel {
-        display:flex; gap:6px; margin-bottom:80px;
-        height:380px; overflow:hidden; border-radius:12px;
+    @media (max-width:768px) {
+        #faq-section { padding:72px 6vw 100px; }
+        #faq-heading { font-size:18px; line-height:28px; }
+        .faq-question { font-size:14px; padding:18px 0; }
+        .faq-answer-inner p { font-size:14px; }
     }
-    .init-panel {
-        flex:1 1 0;           /* all panels share space equally when collapsed */
-        min-width:0;
-        border-radius:10px;
-        overflow:hidden; cursor:pointer;
-        transition:flex-grow 0.45s cubic-bezier(0.4,0,0.2,1);
-        position:relative;
-    }
-    /* the image fills the whole panel as the background slice */
-    .init-panel-bg {
-        position:absolute; inset:0;
-        background-size:cover; background-position:center;
-        transition:filter 0.3s;
-        filter:brightness(0.82);
-    }
-    .init-panel:hover .init-panel-bg { filter:brightness(1); }
-    /* dark gradient at bottom for legibility when expanded */
-    .init-panel-bg::after {
-        content:''; position:absolute; inset:0;
-        background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%);
-        opacity:0; transition:opacity 0.3s;
-    }
-    .init-panel:hover .init-panel-bg::after { opacity:1; }
-    /* hover expands this panel to ~3× its share */
-    .init-panel:hover { flex-grow:4; }
-    /* expanded card content (overlaid on image) */
-    .init-panel-content {
-        position:absolute; bottom:0; left:0; right:0;
-        padding:16px 16px 18px;
-        opacity:0; transition:opacity 0.2s 0.42s;
-    }
-    .init-panel:hover .init-panel-content { opacity:1; transition:opacity 0.2s 0.42s; }
-    .init-panel:not(:hover) .init-panel-content { opacity:0; transition:opacity 0s; }
-    .init-card-title { font-family:'Geist',sans-serif; font-size:0.88rem; font-weight:600; color:#fff; margin-bottom:5px; line-height:1.35; }
-    .init-card-meta  { font-family:'Geist Mono',monospace; font-size:7pt; color:rgba(255,255,255,0.75); line-height:1.6; }
-    .init-card-link  { display:inline-block; margin-top:8px; font-family:'Geist',sans-serif; font-size:7.5pt; font-weight:600; color:#8ECBF0; text-decoration:none; }
-    .init-card-link:hover { text-decoration:underline; }
-
-
-    </style>
+</style>
 </head>
 <body>
-<!-- ═══ STATIC CONTENT ═══ -->
-<div id="static-content">
 
-    <!-- Initiative carousel -->
-    <div id="initiative-carousel">
-        <!-- Cards injected by JS once data loads -->
+<div id="faq-section">
+    <div id="faq-inner">
+        <h2 id="faq-heading">Monitor FAQ</h2>
+        <div id="faq-list">
+
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">
+                    <span class="faq-question-text">How many rights of nature are there?</span>
+                    <span class="faq-chevron"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        <p>As of <span id="faq-year">2026</span>, we have tracked <span id="faq-total">699</span> eco jurisprudence initiatives in <span id="faq-countries">67</span> countries and territories. <span id="faq-ron">523</span> of them are rights of nature. Yes, there is a difference. Check out our <a href="https://ecojurisprudence.org/?post_type=ejm_initiative" target="_blank" rel="noopener">initiative index</a> to explore the beautiful diversity of the movement.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">
+                    <span class="faq-question-text">Wait, there is more than rights of nature?</span>
+                    <span class="faq-chevron"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        <p>We track all kinds of ecocentric law around the world. In addition to the rights of nature, we monitor environmental personhood, animal rights, ecological governance systems, Indigenous models, local ecological knowledge, and ecocide. Our <a href="https://ecojurisprudence.org/codebook/" target="_blank" rel="noopener">codebook</a> has all the definitions you need.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">
+                    <span class="faq-question-text">What else do you track?</span>
+                    <span class="faq-chevron"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        <p>For every initiative, we try to gather as much information as possible: who, what, when, where, how, and why? That means a lot of research that leads to many exciting rabbit holes. Have you ever heard about the disputed Indonesian province of West Papua and its Indigenous Green Philosophy Declaration? Well, now you do.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">
+                    <span class="faq-question-text">You do have some mistakes on the website!</span>
+                    <span class="faq-chevron"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        <p>We are doing our very best to be the most reliable and accurate on ecocentric law globally. We are also humans and make mistakes. If you find one or more, please <a href="https://ecojurisprudence.org/contact/" target="_blank" rel="noopener">let us know</a> and we will fix them as quickly as we can. Is an initiative missing? Please <a href="https://ecojurisprudence.org/new-initiative/" target="_blank" rel="noopener">tell us that too</a>. We rely on our community to build this resource with and for the public. Thank you!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">
+                    <span class="faq-question-text">Can I use your data?</span>
+                    <span class="faq-chevron"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        <p>Yes, please do. All of our data is under a <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0 license</a> and follows additional <a href="https://ecojurisprudence.org/data-ethics/" target="_blank" rel="noopener">data ethics</a>. That means you can use and adapt it for all the projects you want. We only ask you to cite us properly and to continue the spirit of open knowledge. <a href="https://ecojurisprudence.org/contact/" target="_blank" rel="noopener">Let us know</a> about what you do. We are always excited to hear about, collaborate, promote, or support your project in any way we can.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">
+                    <span class="faq-question-text">Who pays for all of this?</span>
+                    <span class="faq-chevron"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        <p>We wouldn't be here without generous grants from the <a href="https://www.rbf.org/" target="_blank" rel="noopener">Rockefeller Brothers Fund</a>, <a href="https://environmentnow.org/" target="_blank" rel="noopener">Environment Now</a>, and countless hours from a small group of priceless academics and experts, dedicated volunteers, motivated interns, and a growing community of EJM partners. You can also support us directly via a <a href="https://ecomm.uoregon.edu/order_form/polisci-donate-eco-jurisprudence-monitor" target="_blank" rel="noopener">one-time or regular donation</a>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">
+                    <span class="faq-question-text">I want some names!</span>
+                    <span class="faq-chevron"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        <p>Craig Kauffman is the Principal Investigator and Executive Director of this project. Cat Haas is the managing director of this research project. We are supported by many more people that you can find on our <a href="https://ecojurisprudence.org/about-2/" target="_blank" rel="noopener">About page</a>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">
+                    <span class="faq-question-text">Why are you doing this?</span>
+                    <span class="faq-chevron"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        <p>Because ecocentric law presents an inspiring solution to some of the world's current challenges! It's so inspiring that we want people to know all about it. We believe in rigorous research and superb science communication. We also believe that facts should inform opinions, not the other way around.*</p>
+                        <p>*And that includes proper citation &ndash; this quote was inspired by a 2019 slogan by the German Newspaper FAZ.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">
+                    <span class="faq-question-text">Speaking of science communication, your website is pretty nice! Who made it?</span>
+                    <span class="faq-chevron"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        <p>You are seeing the result of years of work and steep learning curves. You would not believe how difficult it is to make something look easy. We had amazing people doing amazing things and are very proud of how it turned out. Special thanks to our website 2.0 designer Louis Charron and our data-viz-ard Carmen Quintos.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">
+                    <span class="faq-question-text">But you still use a Eurocentric world map? Ugh.</span>
+                    <span class="faq-chevron"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        <p>While designing the EJM, we considered using many different map projections that would reflect our core values (Dymaxion, South-up, Waterman Butterfly... you name them). Ask our cartographer-in-chief Alex Putzer about it. In all of our design choices, we are looking for the ideal combination between integrity, innovation, and feasibility. Eventually, much of it boils down to accessibility in its many shapes and forms. Hey, at least it's not Mercator.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" type="button" aria-expanded="false">
+                    <span class="faq-question-text">Ok, this all sounds very cool. Can I work for you?</span>
+                    <span class="faq-chevron"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        <p>Of course you can! We are always looking for new people that can help to make this project better. We don't typically have the funds to pay you, but we are more than happy to support you in finding some. Any questions left unanswered? When in doubt, <a href="https://ecojurisprudence.org/contact/" target="_blank" rel="noopener">reach out</a>!</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
-
-
-</div><!-- /static-content -->
+</div>
 
 <script>
-Papa.parse('https://docs.google.com/spreadsheets/d/e/2PACX-1vSKgeCFRWhEydDOm3JMjw-F9MI8bNvgWYkXSA-_3S8Mo9Ehxs3WrB07UbNfrFdfDiOLqHc67BR6kyaG/pub?gid=600477657&single=true&output=csv',{
-    download:true, header:true,
-    complete(results){
-        const data=results.data.filter(r=>r.Region && (r["Carmen's "]||'').trim().toLowerCase()==='aa');
-        buildCarousel(results.data);
-    },
-    error(){ console.error('Data load failed'); }
+/* Accordion toggle */
+document.querySelectorAll('.faq-item').forEach(function(item){
+    var btn = item.querySelector('.faq-question');
+    if(!btn) return;
+    btn.addEventListener('click', function(){
+        var isOpen = item.classList.contains('expanded');
+        item.classList.toggle('expanded', !isOpen);
+        btn.setAttribute('aria-expanded', String(!isOpen));
+    });
 });
 
-/* ════════════════════════════════════════════════════
-   CAROUSEL (static content, built once data loads)
-════════════════════════════════════════════════════ */
-function buildCarousel(allData){
-    const container=document.getElementById('initiative-carousel');
-    const ccRows=allData.filter(r=>r.Title && (r["Carmen's "]||'').trim().toLowerCase()==='cc');
-    const sample=ccRows.filter(r=>r['Cover Image']);
-    const extra=ccRows.filter(r=>!r['Cover Image']);
-    while(extra.length) sample.push(extra.shift());
-    container.innerHTML=sample.map((d,i)=>{
-        const img=(d['Cover Image']||'').trim();
-        const bgStyle=img?`background-image:url('${img}')`:`background:#C8C8B8`;
-        // Preload first image eagerly via a hidden img tag for faster paint
-        const preload=img&&i===0?`<img src="${img}" style="display:none" fetchpriority="high" alt="">`:'';
-        return `
-        <div class="init-panel">
-            ${preload}
-            <div class="init-panel-bg" style="${bgStyle}"></div>
-            <div class="init-panel-content">
-                <div class="init-card-title">${d.Title||'Unknown Initiative'}</div>
-                <div class="init-card-meta">
-                    ${d['Primary Year']||'—'} &nbsp;·&nbsp;
-                    ${(d.Status||'—').trim()} &nbsp;·&nbsp;
-                    ${d.Region||'—'}
-                </div>
-                ${d.Permalink?`<a class="init-card-link" href="${d.Permalink}" target="_blank">View initiative ↗</a>`:''}
-            </div>
-        </div>`;
-    }).join('');
+/* Auto-updated numbers (year, totals, rights-of-nature count) — only in Q1 */
+document.getElementById('faq-year').textContent = new Date().getFullYear();
+
+fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSKgeCFRWhEydDOm3JMjw-F9MI8bNvgWYkXSA-_3S8Mo9Ehxs3WrB07UbNfrFdfDiOLqHc67BR6kyaG/pub?gid=600477657&single=true&output=csv')
+    .then(function(r){ return r.text(); })
+    .then(function(csvText){
+        var rows = parseCSV(csvText);
+        if(!rows.length) return;
+        var header = rows[0];
+        var records = rows.slice(1).map(function(row){
+            var obj = {};
+            header.forEach(function(key, i){ obj[key] = row[i] || ''; });
+            return obj;
+        }).filter(function(r){
+            var carmen = (r["Carmen's "] || '').trim().toLowerCase();
+            return r.Region && (carmen === 'aa' || carmen === 'cc');
+        });
+
+        var totalEl = document.getElementById('faq-total');
+        if(totalEl) totalEl.textContent = records.length;
+
+        var countriesEl = document.getElementById('faq-countries');
+        if(countriesEl){
+            var countrySet = {};
+            records.forEach(function(r){
+                var c = (r.Country || '').trim();
+                if(c) countrySet[c] = true;
+            });
+            countriesEl.textContent = Object.keys(countrySet).length;
+        }
+
+        var ronEl = document.getElementById('faq-ron');
+        if(ronEl){
+            var ronCount = records.filter(function(r){
+                return (r['Ecological Jurisprudence'] || '').indexOf('Rights of Nature') !== -1;
+            }).length;
+            ronEl.textContent = ronCount;
+        }
+    })
+    .catch(function(err){ console.error('FAQ stats load failed:', err); });
+
+/* Minimal CSV parser (handles quoted fields with commas/newlines) */
+function parseCSV(text){
+    var rows = [];
+    var row = [];
+    var field = '';
+    var inQuotes = false;
+    for(var i = 0; i < text.length; i++){
+        var c = text[i];
+        if(inQuotes){
+            if(c === '"'){
+                if(text[i+1] === '"'){ field += '"'; i++; }
+                else { inQuotes = false; }
+            } else { field += c; }
+        } else {
+            if(c === '"'){ inQuotes = true; }
+            else if(c === ','){ row.push(field); field = ''; }
+            else if(c === '\n'){ row.push(field); field=''; rows.push(row); row=[]; }
+            else if(c === '\r'){ /* skip */ }
+            else { field += c; }
+        }
+    }
+    if(field.length || row.length){ row.push(field); rows.push(row); }
+    return rows;
 }
-
-
 </script>
+
 </body>
 </html>
