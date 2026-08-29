@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Monitor FAQ</title>
+<title>FAQ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -56,6 +56,25 @@
     .faq-answer-inner a { color:var(--color-off-black); text-decoration:underline; }
     .faq-answer-inner a:hover { opacity:0.7; }
 
+    .footnote-marker {
+        position:relative; cursor:help; font-size:0.7em;
+        color:var(--color-off-black); text-decoration:underline dotted;
+    }
+    .footnote-tooltip {
+        visibility:hidden; opacity:0; pointer-events:none;
+        position:absolute; left:50%; bottom:calc(100% + 8px); transform:translateX(-50%);
+        width:260px; max-width:70vw; font-size:13px; font-weight:400; line-height:1.45;
+        text-align:left; text-decoration:none;
+        background:var(--color-off-black); color:#fff; padding:10px 12px; border-radius:6px;
+        box-shadow:0 4px 12px rgba(0,0,0,0.15); transition:opacity 0.15s ease; z-index:10;
+    }
+    .footnote-tooltip a { color:#fff; }
+    .footnote-marker:hover .footnote-tooltip,
+    .footnote-marker:focus .footnote-tooltip,
+    .footnote-tooltip:hover {
+        visibility:visible; opacity:1; pointer-events:auto;
+    }
+
     @media (max-width:768px) {
         #faq-section { padding:72px 6vw 100px; }
         #faq-heading { font-size:18px; line-height:28px; }
@@ -68,7 +87,7 @@
 
 <div id="faq-section">
     <div id="faq-inner">
-        <h2 id="faq-heading">Monitor FAQ</h2>
+        <h2 id="faq-heading">FAQ</h2>
         <div id="faq-list">
 
             <div class="faq-item">
@@ -78,7 +97,7 @@
                 </button>
                 <div class="faq-answer">
                     <div class="faq-answer-inner">
-                        <p>As of <span id="faq-year">2026</span>, we have tracked <span id="faq-total">699</span> eco jurisprudence initiatives in <span id="faq-countries">67</span> countries and territories. <span id="faq-ron">523</span> of them are rights of nature. Yes, there is a difference. Check out our <a href="https://ecojurisprudence.org/?post_type=ejm_initiative" target="_blank" rel="noopener">initiative index</a> to explore the beautiful diversity of the movement.</p>
+                        <p>As of <span id="faq-year">2026</span>, we have tracked <span id="faq-total">699</span> eco jurisprudence initiatives in <span id="faq-countries">67</span> countries and territories. <span id="faq-ron">523</span> of them are rights of nature. Yes, there is a difference. Check out our <a href="https://ecojurisprudence.org/?post_type=ejm_initiative" target="_blank" rel="noopener">initiative index</a> to explore the diversity of the movement.</p>
                     </div>
                 </div>
             </div>
@@ -102,19 +121,19 @@
                 </button>
                 <div class="faq-answer">
                     <div class="faq-answer-inner">
-                        <p>For every initiative, we try to gather as much information as possible: who, what, when, where, how, and why? That means a lot of research that leads to many exciting rabbit holes. Have you ever heard about the disputed Indonesian province of West Papua and its Indigenous Green Philosophy Declaration? Well, now you do.</p>
+                        <p>For every initiative, we try to gather as much information as possible: who, what, when, where, how, and why? That means a lot of research that leads to many exciting rabbit holes. Have you ever heard about the disputed Indonesian province of West Papua and its <a href="https://ecojurisprudence.org/initiatives/west-papau-green-state-vision/" target="_blank" rel="noopener">Indigenous Green Philosophy Declaration</a>? Well, now you do.</p>
                     </div>
                 </div>
             </div>
 
             <div class="faq-item">
                 <button class="faq-question" type="button" aria-expanded="false">
-                    <span class="faq-question-text">You do have some mistakes on the website!</span>
+                    <span class="faq-question-text">You do have some errors on the website!</span>
                     <span class="faq-chevron"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                 </button>
                 <div class="faq-answer">
                     <div class="faq-answer-inner">
-                        <p>We are doing our very best to be the most reliable and accurate on ecocentric law globally. We are also humans and make mistakes. If you find one or more, please <a href="https://ecojurisprudence.org/contact/" target="_blank" rel="noopener">let us know</a> and we will fix them as quickly as we can. Is an initiative missing? Please <a href="https://ecojurisprudence.org/new-initiative/" target="_blank" rel="noopener">tell us that too</a>. We rely on our community to build this resource with and for the public. Thank you!</p>
+                        <p>We are doing our very best to be the most reliable and comprehensive resource on ecocentric law globally. We are also humans and make errors. If you find one, please <a href="https://ecojurisprudence.org/contact/" target="_blank" rel="noopener">let us know</a> and we will fix them as quickly as we can. Is an initiative missing? Please <a href="https://ecojurisprudence.org/new-initiative/" target="_blank" rel="noopener">tell us that too</a>. We rely on our community to build this resource with and for the public. Thank you!</p>
                     </div>
                 </div>
             </div>
@@ -138,7 +157,7 @@
                 </button>
                 <div class="faq-answer">
                     <div class="faq-answer-inner">
-                        <p>We wouldn't be here without generous grants from the <a href="https://www.rbf.org/" target="_blank" rel="noopener">Rockefeller Brothers Fund</a>, <a href="https://environmentnow.org/" target="_blank" rel="noopener">Environment Now</a>, and countless hours from a small group of priceless academics and experts, dedicated volunteers, motivated interns, and a growing community of EJM partners. You can also support us directly via a <a href="https://ecomm.uoregon.edu/order_form/polisci-donate-eco-jurisprudence-monitor" target="_blank" rel="noopener">one-time or regular donation</a>.</p>
+                        <p>We wouldn't be here without generous grants from the <a href="https://www.rbf.org/" target="_blank" rel="noopener">Rockefeller Brothers Fund</a>, <a href="https://environmentnow.org/" target="_blank" rel="noopener">Environment Now</a>, and countless hours from <a href="https://ecojurisprudence.org/about-2/" target="_blank" rel="noopener">a small group</a> of priceless academics and experts, dedicated volunteers, motivated interns, and a growing community of EJM partners. You can also support us directly via a <a href="https://ecomm.uoregon.edu/order_form/polisci-donate-eco-jurisprudence-monitor" target="_blank" rel="noopener">one-time or regular donation</a>.</p>
                     </div>
                 </div>
             </div>
@@ -150,7 +169,7 @@
                 </button>
                 <div class="faq-answer">
                     <div class="faq-answer-inner">
-                        <p>Craig Kauffman is the Principal Investigator and Executive Director of this project. Cat Haas is the managing director of this research project. We are supported by many more people that you can find on our <a href="https://ecojurisprudence.org/about-2/" target="_blank" rel="noopener">About page</a>.</p>
+                        <p>Craig Kauffman is the Principal Investigator and Executive Director. Cat Haas is the Managing Director of this research project. We are supported by many more people that you can find on our <a href="https://ecojurisprudence.org/about-2/" target="_blank" rel="noopener">About page</a>.</p>
                     </div>
                 </div>
             </div>
@@ -162,8 +181,7 @@
                 </button>
                 <div class="faq-answer">
                     <div class="faq-answer-inner">
-                        <p>Because ecocentric law presents an inspiring solution to some of the world's current challenges! It's so inspiring that we want people to know all about it. We believe in rigorous research and superb science communication. We also believe that facts should inform opinions, not the other way around.*</p>
-                        <p>*And that includes proper citation &ndash; this quote was inspired by a 2019 slogan by the German Newspaper FAZ.</p>
+                        <p>Because ecocentric law presents an inspiring solution to some of the world's current challenges! It's so inspiring that we want people to know all about it. We believe in rigorous research and superb science communication. We also believe that facts should inform opinions, not the other way around.<sup class="footnote-marker" tabindex="0">i<span class="footnote-tooltip">And that includes proper citation &ndash; this quote was inspired by a 2019 slogan by the <a href="https://meedia.de/news/beitrag/2312-neues-layout-neue-schriften-quot-frankfurter-allgemeine-zeitung-quot-veraendert-behutsam-ihr-erscheinungsbild.html" target="_blank" rel="noopener">German Newspaper FAZ</a>.</span></sup></p>
                     </div>
                 </div>
             </div>
@@ -175,7 +193,7 @@
                 </button>
                 <div class="faq-answer">
                     <div class="faq-answer-inner">
-                        <p>You are seeing the result of years of work and steep learning curves. You would not believe how difficult it is to make something look easy. We had amazing people doing amazing things and are very proud of how it turned out. Special thanks to our website 2.0 designer Louis Charron and our data-viz-ard Carmen Quintos.</p>
+                        <p>You are seeing the result of years of work and steep learning curves. You would not believe how difficult it is to make something look easy. We had amazing people doing amazing things and are very proud of how it turned out. Special thanks to our website 2.0 designer <a href="https://www.louischarron.io/" target="_blank" rel="noopener">Louis Charron</a> and our data-viz-ard <a href="https://www.carmenquintos.com/" target="_blank" rel="noopener">Carmen Quintos</a>.</p>
                     </div>
                 </div>
             </div>
@@ -187,7 +205,7 @@
                 </button>
                 <div class="faq-answer">
                     <div class="faq-answer-inner">
-                        <p>While designing the EJM, we considered using many different map projections that would reflect our core values (Dymaxion, South-up, Waterman Butterfly... you name them). Ask our cartographer-in-chief Alex Putzer about it. In all of our design choices, we are looking for the ideal combination between integrity, innovation, and feasibility. Eventually, much of it boils down to accessibility in its many shapes and forms. Hey, at least it's not Mercator.</p>
+                        <p>While designing the EJM, we considered using many different map projections that would reflect our core values (Dymaxion, South-up, Waterman Butterfly... you name them). Ask our cartographer-in-chief Alex Putzer about it. In all of our design choices, we are looking for the ideal combination between integrity, innovation, and implementability. Eventually, much of it boils down to <a href="https://www.w3.org/WAI/standards-guidelines/wcag/" target="_blank" rel="noopener">accessibility</a> in its many shapes and forms. Hey, at least it's not Mercator.</p>
                     </div>
                 </div>
             </div>
@@ -228,14 +246,14 @@ fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSKgeCFRWhEydDOm3JMjw-F9M
     .then(function(csvText){
         var rows = parseCSV(csvText);
         if(!rows.length) return;
-        var header = rows[0];
+        var header = rows[0].map(function(h){ return h.trim(); });
         var records = rows.slice(1).map(function(row){
             var obj = {};
-            header.forEach(function(key, i){ obj[key] = row[i] || ''; });
+            header.forEach(function(key, i){ obj[key] = (row[i] || '').trim(); });
             return obj;
         }).filter(function(r){
-            var carmen = (r["Carmen's "] || '').trim().toLowerCase();
-            return r.Region && (carmen === 'aa' || carmen === 'cc');
+            var carmen = getField(r, "Carmen's").toLowerCase();
+            return getField(r, 'Region') && (carmen === 'aa' || carmen === 'cc');
         });
 
         var totalEl = document.getElementById('faq-total');
@@ -245,7 +263,7 @@ fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSKgeCFRWhEydDOm3JMjw-F9M
         if(countriesEl){
             var countrySet = {};
             records.forEach(function(r){
-                var c = (r.Country || '').trim();
+                var c = getField(r, 'Country');
                 if(c) countrySet[c] = true;
             });
             countriesEl.textContent = Object.keys(countrySet).length;
@@ -254,12 +272,24 @@ fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSKgeCFRWhEydDOm3JMjw-F9M
         var ronEl = document.getElementById('faq-ron');
         if(ronEl){
             var ronCount = records.filter(function(r){
-                return (r['Ecological Jurisprudence'] || '').indexOf('Rights of Nature') !== -1;
+                return getField(r, 'Ecological Jurisprudence').toLowerCase().indexOf('rights of nature') !== -1;
             }).length;
             ronEl.textContent = ronCount;
         }
     })
     .catch(function(err){ console.error('FAQ stats load failed:', err); });
+
+/* Looks up a record's value by column name, trimmed and case-insensitive,
+   so small differences in the sheet's header spelling/spacing don't break stats */
+function getField(record, name){
+    var target = name.trim().toLowerCase();
+    for(var key in record){
+        if(Object.prototype.hasOwnProperty.call(record, key) && key.trim().toLowerCase() === target){
+            return record[key] || '';
+        }
+    }
+    return '';
+}
 
 /* Minimal CSV parser (handles quoted fields with commas/newlines) */
 function parseCSV(text){
