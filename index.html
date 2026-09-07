@@ -317,5 +317,20 @@ function parseCSV(text){
 }
 </script>
 
+<script>
+    function sendHeight(){
+        var h = document.documentElement.scrollHeight;
+        window.parent.postMessage({ type: 'ejm-faq-height', height: h }, '*');
+    }
+    window.addEventListener('load', sendHeight);
+    window.addEventListener('resize', sendHeight);
+    // Re-check after accordion open/close animations settle
+    document.querySelectorAll('.faq-question').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            setTimeout(sendHeight, 400); // 
+        });
+    });
+    </script>
+
 </body>
 </html>
