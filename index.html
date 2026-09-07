@@ -316,7 +316,10 @@ function parseCSV(text){
     return rows;
 }
 
-/* ===== Report height to parent iframe (no resize listener — avoids feedback loop) ===== */
+/* ===== Report height to parent iframe on load and on every accordion toggle =====
+   The iframe resizes to match actual content height each time a question
+   opens/closes. A fixed gap to the footer is added on the PARENT side,
+   not here, so the gap stays constant regardless of expand state. */
 function sendHeight(){
     var h = document.documentElement.scrollHeight;
     window.parent.postMessage({ type: 'ejm-faq-height', height: h }, '*');
