@@ -315,22 +315,19 @@ function parseCSV(text){
     if(field.length || row.length){ row.push(field); rows.push(row); }
     return rows;
 }
-</script>
 
-<script>
-    function sendHeight(){
-        var h = document.documentElement.scrollHeight;
-        window.parent.postMessage({ type: 'ejm-faq-height', height: h }, '*');
-    }
-    window.addEventListener('load', sendHeight);
-    window.addEventListener('resize', sendHeight);
-    // Re-check after accordion open/close animations settle
-    document.querySelectorAll('.faq-question').forEach(function(btn){
-        btn.addEventListener('click', function(){
-            setTimeout(sendHeight, 400); // 
-        });
+/* ===== Report height to parent iframe (no resize listener — avoids feedback loop) ===== */
+function sendHeight(){
+    var h = document.documentElement.scrollHeight;
+    window.parent.postMessage({ type: 'ejm-faq-height', height: h }, '*');
+}
+window.addEventListener('load', sendHeight);
+document.querySelectorAll('.faq-question').forEach(function(btn){
+    btn.addEventListener('click', function(){
+        setTimeout(sendHeight, 400); // matches the 0.35s grid-template-rows transition
     });
-    </script>
+});
+</script>
 
 </body>
 </html>
