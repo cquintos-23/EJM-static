@@ -317,12 +317,13 @@ function parseCSV(text){
 }
 
 /* ===== Report height to parent iframe on load and on every accordion toggle =====
-   The iframe resizes to match actual content height each time a question
-   opens/closes. A fixed gap to the footer is added on the PARENT side,
-   not here, so the gap stays constant regardless of expand state. */
+   IMPORTANT: we measure #faq-section directly, not document.documentElement.
+   documentElement.scrollHeight stretches to fill the viewport when content
+   is shorter than the window, which reports the wrong (too-large) number. */
 function sendHeight(){
-    var h = document.documentElement.scrollHeight;
-    window.parent.postMessage({ type: 'ejm-faq-height', height: h }, '*');
+    var section = document.getElementById('faq-section');
+    var h = section ? section.getBoundingClientRect().height : document.documentElement.scrollHeight;
+    window.parent.postMessage({ type: 'ejm-faq-height', height: Math.ceil(h) }, '*');
 }
 window.addEventListener('load', sendHeight);
 document.querySelectorAll('.faq-question').forEach(function(btn){
