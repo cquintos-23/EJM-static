@@ -333,11 +333,21 @@ if (document.fonts && document.fonts.ready) {
 
 setTimeout(sendHeight, 800);
 
-document.querySelectorAll('.faq-question').forEach(function(btn){
-    btn.addEventListener('click', function(){
-        setTimeout(sendHeight, 400); // matches the 0.35s grid-template-rows transition
+/* Continuously report height while the accordion animates open/closed,
+   instead of only once at the end. This keeps the outer iframe in sync
+   with the content frame-by-frame during the 0.35s transition, so rows
+   further down the page never get clipped mid-animation. */
+if (window.ResizeObserver) {
+    var ro = new ResizeObserver(function(){ sendHeight(); });
+    ro.observe(document.getElementById('faq-section'));
+} else {
+    // Fallback for older browsers without ResizeObserver support
+    document.querySelectorAll('.faq-question').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            setTimeout(sendHeight, 400);
+        });
     });
-});
+}
 </script>
 
 </body>
