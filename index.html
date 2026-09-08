@@ -326,6 +326,13 @@ function sendHeight(){
     window.parent.postMessage({ type: 'ejm-faq-height', height: Math.ceil(h) }, '*');
 }
 window.addEventListener('load', sendHeight);
+
+if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(sendHeight);
+}
+
+setTimeout(sendHeight, 800);
+
 document.querySelectorAll('.faq-question').forEach(function(btn){
     btn.addEventListener('click', function(){
         setTimeout(sendHeight, 400); // matches the 0.35s grid-template-rows transition
