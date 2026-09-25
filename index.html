@@ -252,8 +252,10 @@ fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSKgeCFRWhEydDOm3JMjw-F9M
             header.forEach(function(key, i){ obj[key] = (row[i] || '').trim(); });
             return obj;
         }).filter(function(r){
+            // Same rule as the map's initiative counter: every row marked aa, bb or cc
+            // in the Carmen's column counts.
             var carmen = getField(r, "Carmen's").toLowerCase();
-            return getField(r, 'Region') && (carmen === 'aa' || carmen === 'cc');
+            return carmen === 'aa' || carmen === 'bb' || carmen === 'cc';
         });
 
         var totalEl = document.getElementById('faq-total');
